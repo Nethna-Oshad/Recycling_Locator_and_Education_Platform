@@ -13,6 +13,7 @@ const wastestockRoutes = require('./routes/WastestockRoute');
 const routeRoutes = require('./routes/RouteRoute'); // Correctly reference RouteRoute.js
 const collectingToolRoutes = require("./routes/CollectingtoolRoute");
 const requestRoutes = require("./routes/RequestRoute");
+const userRouter = require("./routes/UserRoute");
 
 const PORT = process.env.PORT || 8070;
 const MONGODB_URL = process.env.MONGODB_URL;
@@ -26,6 +27,7 @@ app.use('/waste', wastestockRoutes);
 app.use('/routes', routeRoutes);  // Add the route handler for /routes
 app.use("/api/collectingtool", collectingToolRoutes);
 app.use("/api/request", requestRoutes);
+app.use("/api/users", userRouter);
 
 // ✅ Default Route (For Testing)
 app.get('/', (req, res) => {
