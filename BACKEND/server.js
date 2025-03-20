@@ -27,7 +27,7 @@ app.use('/waste', wastestockRoutes);
 app.use('/routes', routeRoutes);  // Add the route handler for /routes
 app.use("/api/collectingtool", collectingToolRoutes);
 app.use("/api/request", requestRoutes);
-app.use("/api/users", userRouter);
+app.use("/users", userRouter);
 
 // ✅ Default Route (For Testing)
 app.get('/', (req, res) => {
