@@ -1,8 +1,9 @@
+// routes/CollectingtoolRoute.js
 const express = require("express");
 const router = express.Router();
 const collectingtoolController = require("../controllers/CollectingtoolController");
 
-// Create a new collecting tool
+// Create new collecting tool(s)
 router.post("/add", collectingtoolController.addCollectingtool);
 
 // Get all collecting tools

@@ -1,123 +1,98 @@
-const Route = require('../models/RouteModel'); // Import the Route model
+// controllers/RouteController.js
+const Route = require("../models/RouteModel");
 
-// Create a new route
-exports.createRoute = async (req, res) => {
-    try {
-        // Create a new route instance using request body data
-        const newRoute = new Route(req.body);
-        await newRoute.save(); // Save the new route to the database
+// Add a new route
+exports.addRoute = async (req, res) => {
+  try {
+    const { routeName, startLocation, endLocation, vehicleType, collectingDays, collectingTime, routeDescription, status } = req.body;
 
-        // Respond with success message and created route data
-        res.status(201).json({
-            success: true,
-            message: "Route created successfully",
-            data: newRoute
-        });
-    } catch (error) {
-        // Handle errors during route creation
-        res.status(400).json({
-            success: false,
-            error: "Route creation failed"
-        });
+    if (!routeName || !startLocation || !endLocation || !vehicleType || !collectingTime) {
+      return res.status(400).json({ message: "Route name, start location, end location, vehicle type, and collecting time are required" });
     }
+
+    const newRoute = new Route({
+      routeName,
+      startLocation,
+      endLocation,
+      vehicleType,
+      collectingDays: collectingDays || [],
+      collectingTime,
+      routeDescription: routeDescription || "",
+      status: status !== undefined ? status : true
+    });
+
+    await newRoute.save();
+    res.status(201).json({ message: "Route added successfully", route: newRoute });
+  } catch (err) {
+    res.status(500).json({ message: "Error adding route", error: err.message });
+  }
 };
 
 // Get all routes
 exports.getAllRoutes = async (req, res) => {
-    try {
-        // Fetch all routes from the database
-        const routes = await Route.find();
-        
-        // Respond with retrieved routes
-        res.status(200).json({
-            success: true,
-            data: routes
-        });
-    } catch (error) {
-        // Handle errors during route retrieval
-        res.status(500).json({
-            success: false,
-            error: "Failed to retrieve routes"
-        });
-    }
+  try {
+    const routes = await Route.find();
+    res.status(200).json({ message: "Routes fetched successfully", routes });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching routes", error: err.message });
+  }
 };
 
 // Get a route by ID
 exports.getRouteById = async (req, res) => {
-    try {
-        // Find the route by ID provided in the request params
-        const route = await Route.findById(req.params.id);
-        if (!route) {
-            return res.status(404).json({
-                success: false,
-                error: "Route not found"
-            });
-        }
-        // Respond with the found route
-        res.status(200).json({
-            success: true,
-            data: route
-        });
-    } catch (error) {
-        // Handle errors during fetching of the specific route
-        res.status(500).json({
-            success: false,
-            error: "Failed to fetch route details"
-        });
+  try {
+    const route = await Route.findById(req.params.id);
+    if (!route) {
+      return res.status(404).json({ message: "Route not found" });
     }
+    res.status(200).json({ message: "Route fetched successfully", route });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching route", error: err.message });
+  }
 };
 
 // Update a route by ID
 exports.updateRoute = async (req, res) => {
-    try {
-        // Find the route by ID and update it with the new data
-        const updatedRoute = await Route.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true } // Return the updated document
-        );
-        if (!updatedRoute) {
-            return res.status(404).json({
-                success: false,
-                error: "Route not found"
-            });
-        }
-        // Respond with success message and updated route data
-        res.status(200).json({
-            success: true,
-            message: "Route updated successfully",
-            data: updatedRoute
-        });
-    } catch (error) {
-        // Handle errors during route update
-        res.status(400).json({
-            success: false,
-            error: "Update failed"
-        });
+  try {
+    const { routeName, startLocation, endLocation, vehicleType, collectingDays, collectingTime, routeDescription, status } = req.body;
+
+    if (!routeName || !startLocation || !endLocation || !vehicleType || !collectingTime) {
+      return res.status(400).json({ message: "Route name, start location, end location, vehicle type, and collecting time are required" });
     }
+
+    const updatedRoute = await Route.findByIdAndUpdate(
+      req.params.id,
+      {
+        routeName,
+        startLocation,
+        endLocation,
+        vehicleType,
+        collectingDays: collectingDays || [],
+        collectingTime,
+        routeDescription: routeDescription || "",
+        status: status !== undefined ? status : true
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedRoute) {
+      return res.status(404).json({ message: "Route not found" });
+    }
+    res.status(200).json({ message: "Route updated successfully", route: updatedRoute });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating route", error: err.message });
+  }
 };
 
 // Delete a route by ID
 exports.deleteRoute = async (req, res) => {
-    try {
-        // Find the route by ID and delete it from the database
-        const deletedRoute = await Route.findByIdAndDelete(req.params.id);
-        if (!deletedRoute) {
-            return res.status(404).json({
-                success: false,
-                error: "Route not found"
-            });
-        }
-        // Respond with success message after deletion
-        res.status(200).json({
-            success: true,
-            message: "Route deleted successfully"
-        });
-    } catch (error) {
-        // Handle errors during route deletion
-        res.status(500).json({
-            success: false,
-            error: "Failed to delete route"
-        });
+  try {
+    const deletedRoute = await Route.findByIdAndDelete(req.params.id);
+    if (!deletedRoute) {
+      return res.status(404).json({ message: "Route not found" });
     }
+    res.status(200).json({ message: "Route deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting route", error: err.message });
+  }
 };

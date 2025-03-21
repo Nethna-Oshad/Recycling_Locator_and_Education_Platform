@@ -1,40 +1,41 @@
-const mongoose = require('mongoose'); // Import mongoose for database operations
+// models/RouteModel.js
+const mongoose = require('mongoose');
 
 const routeSchema = new mongoose.Schema({
-    routeName: { 
-        type: String,  // Store the route name
-        required: true, 
-        trim: true 
-    },
-    startLocation: { 
-        type: String, // Store the start location
-        required: true 
-    },
-    endLocation: { 
-        type: String, // Store the end location
-        required: true 
-    },
-    vehicleType: { 
-        type: String, // Store vehicle type
-        enum: ['MiniTruck', 'Truck'], // Only allow MiniTruck or Truck
-        required: true 
-    },
-    collectingDays: [{ 
-        type: String, // Array of collection days
-        enum: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    }],
-    collectionDate: { 
-        type: Date, // Store collection date
-        required: true 
-    },
-    routeDescription: { 
-        type: String, // Additional route details
-        trim: true 
-    },
-    status: { 
-        type: Boolean, // Active or inactive status
-        default: true 
-    }
-}, { timestamps: true }); // Automatically add createdAt and updatedAt timestamps
+  routeName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  startLocation: {
+    type: String,
+    required: true
+  },
+  endLocation: {
+    type: String,
+    required: true
+  },
+  vehicleType: {
+    type: String,
+    enum: ['MiniTruck', 'Truck'],
+    required: true
+  },
+  collectingDays: [{
+    type: String,
+    enum: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  }],
+  collectingTime: { // Changed from collectionDate to collectingTime
+    type: String, // e.g., "14:30"
+    required: true
+  },
+  routeDescription: {
+    type: String,
+    trim: true
+  },
+  status: {
+    type: Boolean,
+    default: true
+  }
+}, { timestamps: true });
 
-module.exports = mongoose.model('Route', routeSchema); // Export the model
+module.exports = mongoose.model('Route', routeSchema);

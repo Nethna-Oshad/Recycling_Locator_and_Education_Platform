@@ -1,12 +1,13 @@
-const express = require('express');
+// routes/routeRoutes.js (note the 's' and consistent naming)
+const express = require("express");
 const router = express.Router();
-const routeController = require('../controllers/RouteController');
+const routeController = require("../controllers/RouteController");
 
 // Routes for managing garbage collection routes
-router.post('/add', routeController.createRoute); // Create a new route
-router.get('/', routeController.getAllRoutes); // Get all routes
-router.get('/:id', routeController.getRouteById); // Get a single route by ID
-router.put('/update/:id', routeController.updateRoute); // Update a route by ID
-router.delete('/delete/:id', routeController.deleteRoute); // Delete a route by ID
+router.post("/add", routeController.addRoute);
+router.get("/", routeController.getAllRoutes);
+router.get("/:id", routeController.getRouteById);
+router.put("/update/:id", routeController.updateRoute);
+router.delete("/delete/:id", routeController.deleteRoute);
 
 module.exports = router;
