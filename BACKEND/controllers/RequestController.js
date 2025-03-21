@@ -1,3 +1,4 @@
+// controllers/RequestController.js
 const Request = require("../models/RequestModel");
 
 // Add a new emergency request
@@ -41,24 +42,24 @@ exports.getRequestById = async (req, res) => {
   }
 };
 
-// Update request status (Admin Use Only)
+// Update request (allow all fields, not just status)
 exports.updateRequestStatus = async (req, res) => {
   try {
-    const { requestStatus } = req.body;
-    
+    const { fullName, emergencyRequestType, description, requestStatus } = req.body;
+
     const updatedRequest = await Request.findByIdAndUpdate(
       req.params.id,
-      { requestStatus },
-      { new: true }
+      { fullName, emergencyRequestType, description, requestStatus },
+      { new: true, runValidators: true } // Return updated doc and validate
     );
 
     if (!updatedRequest) {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    res.status(200).json({ message: "Request status updated successfully", request: updatedRequest });
+    res.status(200).json({ message: "Request updated successfully", request: updatedRequest });
   } catch (err) {
-    res.status(500).json({ message: "Error updating request status", error: err.message });
+    res.status(500).json({ message: "Error updating request", error: err.message });
   }
 };
 
